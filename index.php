@@ -76,14 +76,14 @@
 
                     <!-- calling Table and Delet button work. -->
                     <?php
-                        $calling_table = mysqli_query($connect,"SELECT * from orders");
-                        while($data=mysqli_fetch_array($calling_table)){?>
+                        $calling_table = mysqli_query($connect,"SELECT * from orders JOIN foods ON orders.food_id = foods.f_id");
+                        while($data = mysqli_fetch_array($calling_table)){?>
                     
                     <tr> 
                     <td><?=$data['o_id'];?></td>
-                    <td>Food name</td>
+                    <td><?= $data['f_name'];?></td>
                     <td><?=$data['qty'];?></td>                   
-                    <td>Amount</td>
+                    <td><?= $data['f_price'] * $data['qty'];?></td>
                     <td>
                         <a href="" class="text-danger float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
