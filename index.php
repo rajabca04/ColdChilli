@@ -10,8 +10,8 @@
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+<body style="background-color: black;">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white d-print-none sticky-top">
         <div class="container">
              <div class="navbar-brand"><img src="photos/logo.png" alt="" width="50%" height="40px"></div>
              
@@ -28,17 +28,16 @@
         </div>
     </nav>
 
-    <div class="container-fluid mt-1">
+    <div class="container-fluid mt-1 d-print-none">
         <div class="row">
             <div class="col-lg-2">
-                <div class="list-group"><a href="" class="list-group-item list-group-item-active bg-info text-center text-danger">-:Categories:-</a></div>
+                <div class="list-group" style="border-radius: 0%;"><a href="" class="list-group-item list-group-item-active bg-info text-center text-danger">-:Categories:-</a></div>
                  <?php
                     $fetch_ctg = mysqli_query($connect,"select * from categories");
                     while($ctg=mysqli_fetch_array($fetch_ctg)){?> 
 
-                    <div class="list-group"><a href="" class="list-group-item list-group-active"><?= $ctg['title']; ?></a></div>
-                <?php }?>
-    
+                    <div class="list-group" style="border-radius: 0%;"><a href="" class="list-group-item list-group-active"><?= $ctg['title']; ?></a></div>
+                <?php }?>  
 
             </div>
             <div class="col-lg-7">
@@ -55,7 +54,7 @@
                                 <h5 class="text-center"><?= $foods['f_name'];?></h5>
                                 <h5 class="text-center">Rs.<?= $foods['f_price'];?>/-</h5>
 
-                                <a href="ordernow.php?food_id=<?= $foods['f_id'];?>" class="btn btn-success btn-osm mx-auto w-100">Buy</a>   
+                                <a href="ordernow.php?food_id=<?= $foods['f_id'];?>" class="btn btn-success btn-osm mx-auto w-100" style="border-radius: 0%;">Buy</a>   
                         </div>
                     </div>
                     <?php } ?>
@@ -63,7 +62,7 @@
                 </div>                
             </div>
 
-            <div class="col-lg-3">
+            <div class="col-lg-3 d-print-none">
            
                 <table class="table">
                
@@ -76,34 +75,115 @@
 
                     <!-- calling Table and Delet button work. -->
                     <?php
+                    $total = 0;
                         $calling_table = mysqli_query($connect,"SELECT * from orders JOIN foods ON orders.food_id = foods.f_id");
-                        while($data = mysqli_fetch_array($calling_table)){?>
+                        while($data = mysqli_fetch_array($calling_table)):
+                            
+                        $total += ( $data['f_price'] * $data['qty'] );
+
+                            
+                     ?>
                     
-                    <tr> 
+                    <tr style="color:wheat;"> 
                     <td><?=$data['o_id'];?></td>
                     <td><?= $data['f_name'];?></td>
                     <td><?=$data['qty'];?></td>                   
                     <td><?= $data['f_price'] * $data['qty'];?></td>
                     <td>
-                        <a href="" class="text-danger float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                        <a href="index.php?o_id=<?=$data['o_id'];?>" class="text-danger float-end"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
     <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
         </svg></a>
+
+        <!-- Delete work -->
+
+        <?php 
+            if(isset($_GET['o_id'])){
+
+                $delet = $_GET['o_id'];
+
+                $qurery = mysqli_query($connect," DELETE FROM orders where o_id = '$delet'");
+            }
+        
+        ?>
                         </td>
                         </tr>
-                    <?php } ?> 
+                    <?php endwhile; ?> 
 
                 </table>
                 <!--- End calling -->
                 
-                        <div class="card bg-warnign" style="position: fixed; bottom:0; width:100%">
+                        <div class="card bg-warning" style="position: fixed; bottom:0; width:100%;border-radius: 0%;">
                             <div class="card-body">
-                                <h1>Rs. 500/-</h1>
-                                <a href="" class="btn btn-dark">Order Now</a>
+                                <h1>Rs. <?= $total ?>/-</h1>
+                                <a href="#final" data-bs-toggle="modal" class="btn btn-dark d-print-none" style="border-radius: 0%;">Order Now</a>
                             </div>
                         </div>                
             </div>
         </div> 
     </div>
+    <!-- Modal for Print orders. -->
+
+    <div class="modal fade" id="final">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                    <table class="table">
+               
+               <tr class="table-info">
+                   <th>Sno.</th>
+                   <th>Item</th>
+                   <th>Qty</th>
+                   <th>Amount</th>
+               </tr>
+
+               <!-- calling Table and Delet button work. -->
+               <?php
+               $total = 0;
+                   $calling_table = mysqli_query($connect,"SELECT * from orders JOIN foods ON orders.food_id = foods.f_id");
+                   while($data = mysqli_fetch_array($calling_table)):
+                       
+                   $total += ( $data['f_price'] * $data['qty'] );
+
+                       
+                ?>
+               
+               <tr> 
+               <td><?=$data['o_id'];?></td>
+               <td><?= $data['f_name'];?></td>
+               <td><?=$data['qty'];?></td>                   
+               <td><?= $data['f_price'] * $data['qty'];?></td>
+               <td>
+                   <a href="index.php?o_id=<?=$data['o_id'];?>" class="text-danger float-end d-print-none"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+<path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+   </svg></a>
+
+   <!-- Delete work -->
+
+   <?php 
+       if(isset($_GET['o_id'])){
+
+           $delet = $_GET['o_id'];
+
+           $qurery = mysqli_query($connect," DELETE FROM orders where o_id = '$delet'");
+       }
+   
+   ?>
+                   </td>
+                   </tr>
+               <?php endwhile; ?> 
+
+           </table>
+                    </div>
+                    <div class="modal-footer">
+                    <h1>Total amount: Rs. <?= $total ?>/-</h1>
+                        <button type="button" onclick="window.print();" class="btn btn-danger d-print-none">Print</button>
+                        <a href="orders.php?done=1" class="btn btn-success d-print-none">Down</a>
+                    </div>
+                </div>
+            </div>
+    
+    </div>
+    <!-- END of print modal -->
     <!-- modal creation for image insert with ditiels. -->
 
     <div class="modal fade" id="add_recipe">
@@ -133,9 +213,7 @@
                                 while($row = mysqli_fetch_array($calling_ctrg_id)){ ?>
                             
                                 <option value="<?= $row['id'];?>"> <?= $row['title']; ?></option>
-
                             <?php } ?>
-
                             </select>
                         </div>
                         <div class="mb-3">
@@ -143,11 +221,9 @@
                         </div>
                     </form>
                     <?php 
-
                         if(isset($_POST['send'])){
                             $name = $_POST['name'];
                             $price = $_POST['price'];
-
                             $image = $_FILES['image']['name'];
                             $tmp_image = $_FILES['image']['tmp_name'];
                             move_uploaded_file($tmp_image,"photos/$image");
