@@ -10,35 +10,43 @@
     <!-- CSS only -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 </head>
-<body style="background-color: black;">
+<body style="background-color: gray;">
     <nav class="navbar navbar-expand-lg navbar-light bg-white d-print-none sticky-top">
         <div class="container">
              <div class="navbar-brand"><img src="photos/logo.png" alt="" width="50%" height="40px"></div>
              
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a href="" class="nav-link">home</a></li>
-                <li class="nav-item"><a href="" class="nav-link">about</a></li>
-                <li class="nav-item"><a href="" class="nav-link">orders</a></li>
+                <li class="nav-item"><a href="" class="nav-link" style="color: black;" >Home</a></li>
+                <li class="nav-item"><a href="" class="nav-link" style="color: black;" >About</a></li>
+                <li class="nav-item"><a href="" class="nav-link" style="color: black;" >Orders</a></li>
 
-                <li class="nav-item"><a href="#add_cat" data-bs-toggle="modal" class="nav-link">add category</a></li>
-                <li class="nav-item"><a href="#add_recipe" data-bs-toggle="modal" class="nav-link">add Recipe</a></li>
+                <li class="nav-item"><a href="#add_cat" data-bs-toggle="modal" class="nav-link"style="color: black;" >Add category</a></li>
+                <li class="nav-item"><a href="#add_recipe" data-bs-toggle="modal" class="nav-link"style="color: black;" >Add Recipe</a></li>
                 
             </ul>
-            <img src="photos/centerlogo.png" alt="" width="4%" height="40px" style="margin-left:10px ;">
+            <!-- <img src="photos/centerlogo.png" alt="" width="4%" height="40px" style="margin-left:10px ;"> -->
         </div>
     </nav>
 
     <div class="container-fluid mt-1 d-print-none">
         <div class="row">
             <div class="col-lg-2">
-                <div class="list-group" style="border-radius: 0%;"><a href="" class="list-group-item list-group-item-active bg-info text-center text-danger">-:Categories:-</a></div>
-                 <?php
-                    $fetch_ctg = mysqli_query($connect,"select * from categories");
-                    while($ctg=mysqli_fetch_array($fetch_ctg)){?> 
+                <div class="dropdown">
+                    <button class="btn btn-info dropdown-toggle w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 0px;">
+                    <img src="photos/centerlogo.png" alt="" width="12%" height="20px" style="margin-left:10px; margin-top:-2px;">Categories
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <?php
+                        $fetch_ctg = mysqli_query($connect,"select * from categories");
+                        while($ctg=mysqli_fetch_array($fetch_ctg)){?> 
 
-                    <div class="list-group" style="border-radius: 0%;"><a href="" class="list-group-item list-group-active"><?= $ctg['title']; ?></a></div>
-                <?php }?>  
-
+                        <li class="dropdown-item btn btn-info w-100 list-group-item"><a href="" style="text-decoration: none; width:100%; color:black; "><?= $ctg['title']; ?></a></li>
+                        <!-- <li class="dropdown-divider"></li> -->
+                        <?php }?> 
+                    </ul>
+                </div>
+                
+                
             </div>
             <div class="col-lg-7">
                 <div class="row">
@@ -46,16 +54,19 @@
                     $fetch_img = mysqli_query($connect,"select * from foods");
                     while($foods = mysqli_fetch_array($fetch_img)){
                 ?>
-                    <div class="col-3 mb-2">
-                        <div class="card">
-                            <div class="card-body">
-                                <img src="photos/<?= $foods['image']; ?>" alt="" width="100%" height="150px">
-                            </div>
-                                <h5 class="text-center"><?= $foods['f_name'];?></h5>
-                                <h5 class="text-center">Rs.<?= $foods['f_price'];?>/-</h5>
+                    <div class="col-3 mb-2" >
+                       <a href="#" style="text-decoration: none; color:black;">
+                            <div class="card" style="background-color: gray;">
+                                    <div class="card-body">
+                                        <img src="photos/<?= $foods['image']; ?>" alt="" width="100%" height="150px">
+                                        <h5 class="text-center"><?= $foods['f_name'];?></h5>
+                                        <h5 class="text-center" style="font-weight: bolder;">Rs.<?= $foods['f_price'];?>/-</h5>
 
-                                <a href="ordernow.php?food_id=<?= $foods['f_id'];?>" class="btn btn-success btn-osm mx-auto w-100" style="border-radius: 0%;">Buy</a>   
-                        </div>
+                                        <a href="ordernow.php?food_id=<?= $foods['f_id'];?>" class="btn btn-success btn-osm mx-auto w-100" style="border-radius: 0%;">Buy</a>   
+                            
+                                    </div>
+                            </div>
+                       </a>
                     </div>
                     <?php } ?>
                      
